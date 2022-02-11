@@ -6,8 +6,11 @@ module.exports = {
     node: true,
   },
   rules: {
+    'operator-linebreak': 'off',
     'linebreak-style': ['error', 'windows'],
     'require-jsdoc': 0,
+    // 'valid-jsdoc': 'off',
+    // 'eol-last': 'off',
     'indent': 'off',
   },
   extends: ['eslint:recommended', 'google'],
