@@ -1,7 +1,7 @@
-const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const {CleanWebpackPlugin} = require('clean-webpack-plugin');
 const HTMLWebpackPlugin = require('html-webpack-plugin');
-const CopyPlugin = require("copy-webpack-plugin");
-const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const CopyPlugin = require('copy-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const ESLintPlugin = require('eslint-webpack-plugin');
 
 const isProd = process.env.NODE_ENV === 'production';
@@ -9,16 +9,18 @@ const isDev = !isProd;
 
 const path = require('path');
 
-const filename = (extention) => isDev ? `bundle.${extention}` : `bundle.[hash].${extention}`;
+const filename = (extention) => {
+  return isDev ? `bundle.${extention}` : `bundle.[hash].${extention}`;
+};
 
 const jsLoaders = () => {
   const loaders = [
-    "source-map-loader",
+    'source-map-loader',
     {
       loader: 'babel-loader',
       options: {
-        presets: ['@babel/preset-env']
-      }
+        presets: ['@babel/preset-env'],
+      },
     },
   ];
 
@@ -31,19 +33,21 @@ module.exports = {
   entry: ['@babel/polyfill', './index.js'],
   output: {
     filename: filename('js'),
-    path: path.resolve(__dirname, 'dist')
+    path: path.resolve(__dirname, 'dist'),
   },
   resolve: {
     extensions: ['.js'],
     alias: {
       '@': path.resolve(__dirname, 'src'),
-      '@core': path.resolve(__dirname, 'src/core')
-    }
+      '@core': path.resolve(__dirname, 'src/core'),
+      '@components': path.resolve(__dirname, 'src/components'),
+      '@assets': path.resolve(__dirname, 'src/assets'),
+    },
   },
   devtool: isProd ? false : 'source-map',
   devServer: {
     port: 3000,
-    hot: isDev
+    hot: isDev,
   },
   plugins: [
     new ESLintPlugin({
@@ -51,7 +55,7 @@ module.exports = {
       context: path.resolve(__dirname, 'src'),
       exclude: [
         '/node_modules/',
-        '/dist/'
+        '/dist/',
       ],
     }),
     new CleanWebpackPlugin(),
@@ -59,20 +63,20 @@ module.exports = {
       template: 'index.html',
       minify: {
         removeComments: isProd,
-        collapseWhitespace: isProd
-      }
+        collapseWhitespace: isProd,
+      },
     }),
     new CopyPlugin({
       patterns: [
         {
           from: path.resolve(__dirname, 'src/favicon.ico'),
-          to: path.resolve(__dirname, 'dist/favicon.ico')
+          to: path.resolve(__dirname, 'dist/favicon.ico'),
         },
       ],
     }),
     new MiniCssExtractPlugin({
-      filename: filename('css')
-    })
+      filename: filename('css'),
+    }),
   ],
   module: {
     rules: [
@@ -80,15 +84,15 @@ module.exports = {
         test: /\.s[ac]ss$/i,
         use: [
           MiniCssExtractPlugin.loader,
-          "css-loader",
-          "sass-loader",
+          'css-loader',
+          'sass-loader',
         ],
       },
       {
         test: /\.js$/,
         exclude: /node_modules/,
-        use: jsLoaders()
-      }
+        use: jsLoaders(),
+      },
     ],
   },
 };
